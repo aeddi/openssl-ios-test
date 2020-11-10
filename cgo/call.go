@@ -1,88 +1,62 @@
 package cgo
 
-/*
-#cgo CFLAGS: -I../openssl/include
-#cgo LDFLAGS: -L../openssl/lib -lssl -lcrypto -levent
-
-//Encodes Base64
-#include <openssl/bio.h>
-#include <openssl/evp.h>
-#include <openssl/buffer.h>
-#include <event2/event.h>
-#include <stdint.h>
-
-BUF_MEM *bufferPtr;
-
-const char *base64Encode(const char* text, size_t length) {
-	BIO *bio, *b64;
-
-	b64 = BIO_new(BIO_f_base64());
-	bio = BIO_new(BIO_s_mem());
-	bio = BIO_push(b64, bio);
-
-	BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
-	BIO_write(bio, text, length);
-	BIO_flush(bio);
-	BIO_get_mem_ptr(bio, &bufferPtr);
-	BIO_set_close(bio, BIO_NOCLOSE);
-	BIO_free_all(bio);
-
-	return (*bufferPtr).data;
-}
-
-int dataLength() {
-	return (*bufferPtr).length;
-}
-
-void freeBufMem() {
-	BUF_MEM_free(bufferPtr);
-}
-
-const char* testEvent() {
-	struct event_config *cfg = event_config_new();
-
-	event_config_free(cfg);
-
-	return event_get_version();
-}
-*/
-import "C"
-
 import (
-	"encoding/base64"
+	"context"
 	"fmt"
-	"unsafe"
+	"io/ioutil"
+	"net/http"
+	"sync"
+
+	"berty.tech/go-libtor"
+	"github.com/cretz/bine/tor"
 )
 
-func Test(text string) string {
-	cText, cLen := C.CString(text), C.ulong(len(text))
-	cEncoded := C.base64Encode(cText, cLen)
-	encoded := C.GoStringN(cEncoded, C.dataLength())
-	C.free(unsafe.Pointer(cText))
-	C.freeBufMem()
+var (
+	// https://github.com/ipsn/go-libtor/issues/22
+	running = false
+	runLock sync.Mutex
+)
 
-	bytes, err := base64.StdEncoding.DecodeString(encoded)
+// Test performs the dial, it returns a message to print to the user.
+// If debug != nil debug will be used as debug chan else it will be ignored.
+func Test(tempdir string) string {
+	runLock.Lock()
+	if running {
+		runLock.Unlock()
+		return "An other instance is running"
+	}
+	running = true
+	runLock.Unlock()
+	defer func() {
+		runLock.Lock()
+		running = false
+		runLock.Unlock()
+	}()
+	// Check for internet (maybe trigger an autorisation request ?)
+	_, err := http.Get("http://golang.org/")
 	if err != nil {
-		panic(fmt.Sprintf("%s (%s, %s)", err.Error(), text, encoded))
+		return fmt.Sprintf("Can't dial golang : %q", err)
 	}
-
-	decoded := string(bytes)
-	if text != decoded {
-		panic(fmt.Sprintf(
-			"text/ decoded mismatch (%s, %s, %s)",
-			text,
-			encoded,
-			decoded,
-		))
+	// Starting tor node
+	t, err := tor.Start(nil, &tor.StartConf{ProcessCreator: libtor.Creator, TempDataDirBase: tempdir})
+	if err != nil {
+		return fmt.Sprintf("Failed to start tor : %q", err)
 	}
-
-	eventVersion := C.GoString(C.testEvent())
-
-	return fmt.Sprintf(
-		"\ttext: %s\n\tencoded: %s\n\tdecoded: %s\n\tlibevent version: %s",
-		text,
-		encoded,
-		decoded,
-		eventVersion,
-	)
+	defer t.Close()
+	dialer, err := t.Dialer(context.Background(), &tor.DialConf{})
+	if err != nil {
+		return fmt.Sprintf("Failed to create dialler : %q", err)
+	}
+	// Creating transport
+	h := http.Client{Transport: &http.Transport{DialContext: dialer.DialContext}}
+	r, err := h.Get("http://2vgsljkvmsyrxryc4fvb2gl5srazxfbrpszkimpej23yc37jsntp3did.onion:80/tor.txt")
+	if err != nil {
+		return fmt.Sprintf("Failed to do request : %q", err)
+	}
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return fmt.Sprintf("Failed to read body : %q", err)
+	}
+	r.Body.Close()
+	return fmt.Sprintf("Status: %s, Proto: %s, Body: %s", r.Status, r.Proto, string(body))
 }

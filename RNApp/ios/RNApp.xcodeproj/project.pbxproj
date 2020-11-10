@@ -27,6 +27,8 @@
 		8DD61D372552C2E500401C8B /* libssl.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD61D312552C2E400401C8B /* libssl.1.1.dylib */; };
 		8DD61D382552C2E500401C8B /* libssl.1.1.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8DD61D312552C2E400401C8B /* libssl.1.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8DD61D392552C2E500401C8B /* Cgo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD61D322552C2E400401C8B /* Cgo.framework */; };
+		8DD621BF255A99DF00401C8B /* libz.1.2.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD621BE255A99DF00401C8B /* libz.1.2.11.dylib */; };
+		8DD621C0255A99DF00401C8B /* libz.1.2.11.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8DD621BE255A99DF00401C8B /* libz.1.2.11.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BE959426FDAEB06ACD07F48A /* libPods-RNApp-RNAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ABB01E25627CA15FB33B33D /* libPods-RNApp-RNAppTests.a */; };
 		FFAF1395F297CFAB96183CE8 /* libPods-RNApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 946547DDB60520F9F52555BB /* libPods-RNApp-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -58,6 +60,7 @@
 				8DD61D342552C2E400401C8B /* libcrypto.1.1.dylib in Embed Libraries */,
 				8DD61D362552C2E500401C8B /* libevent-2.2.1.dylib in Embed Libraries */,
 				8DD61D382552C2E500401C8B /* libssl.1.1.dylib in Embed Libraries */,
+				8DD621C0255A99DF00401C8B /* libz.1.2.11.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +95,7 @@
 		8DD61D302552C2E400401C8B /* libevent-2.2.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libevent-2.2.1.dylib"; path = "../../openssl/lib/libevent-2.2.1.dylib"; sourceTree = "<group>"; };
 		8DD61D312552C2E400401C8B /* libssl.1.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.1.dylib; path = ../../openssl/lib/libssl.1.1.dylib; sourceTree = "<group>"; };
 		8DD61D322552C2E400401C8B /* Cgo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cgo.framework; path = ../../framework/Cgo.framework; sourceTree = "<group>"; };
+		8DD621BE255A99DF00401C8B /* libz.1.2.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.11.dylib; path = ../../openssl/lib/libz.1.2.11.dylib; sourceTree = "<group>"; };
 		946547DDB60520F9F52555BB /* libPods-RNApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE79F794F77C4726AB2FE90A /* Pods-RNApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNApp.release.xcconfig"; path = "Target Support Files/Pods-RNApp/Pods-RNApp.release.xcconfig"; sourceTree = "<group>"; };
 		B7C264401B303E0ED65712DA /* Pods-RNApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-RNApp-tvOSTests/Pods-RNApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 				04F77C259F4789B96E54F326 /* libPods-RNApp.a in Frameworks */,
 				8DD61D392552C2E500401C8B /* Cgo.framework in Frameworks */,
 				8DD61D372552C2E500401C8B /* libssl.1.1.dylib in Frameworks */,
+				8DD621BF255A99DF00401C8B /* libz.1.2.11.dylib in Frameworks */,
 				8DD61D352552C2E500401C8B /* libevent-2.2.1.dylib in Frameworks */,
 				8DD61D332552C2E400401C8B /* libcrypto.1.1.dylib in Frameworks */,
 			);
@@ -179,6 +184,7 @@
 				8DD61D2F2552C2E400401C8B /* libcrypto.1.1.dylib */,
 				8DD61D302552C2E400401C8B /* libevent-2.2.1.dylib */,
 				8DD61D312552C2E400401C8B /* libssl.1.1.dylib */,
+				8DD621BE255A99DF00401C8B /* libz.1.2.11.dylib */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				37A2A32032AF96B4ABFF4DF2 /* libPods-RNApp.a */,

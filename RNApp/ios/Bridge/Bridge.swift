@@ -11,7 +11,7 @@ import Cgo
 @objc(Bridge)
 class Bridge: NSObject {
   @objc func test(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-    let result = CgoTest("All your base are belong to us")
+    let result = CgoTest(NSTemporaryDirectory())
     resolve(result)
   }
 }
