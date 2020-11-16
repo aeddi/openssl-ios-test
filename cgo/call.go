@@ -5,6 +5,7 @@ package cgo
 #cgo LDFLAGS: -L../openssl/lib -lssl -lcrypto -levent
 
 //Encodes Base64
+#include <openssl/ssl.h>
 #include <openssl/bio.h>
 #include <openssl/evp.h>
 #include <openssl/buffer.h>
@@ -12,6 +13,11 @@ package cgo
 #include <stdint.h>
 
 BUF_MEM *bufferPtr;
+
+void initSSLContext() {
+	SSL_CTX *ctx = SSL_CTX_new(TLS_method());
+	(void)ctx;
+}
 
 const char *base64Encode(const char* text, size_t length) {
 	BIO *bio, *b64;
@@ -55,6 +61,8 @@ import (
 )
 
 func Test(text string) string {
+	C.initSSLContext()
+
 	cText, cLen := C.CString(text), C.ulong(len(text))
 	cEncoded := C.base64Encode(cText, cLen)
 	encoded := C.GoStringN(cEncoded, C.dataLength())
